@@ -1,62 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To do list</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To do list</title>
 </head>
 <body>
-    <h1>To do list</h1>
+  <h1>To do list</h1>
 
-    <input type="text" id="taskInput" placeholder="Add a task!"/>
+  <input type="text" id="taskInput" placeholder="Add a task!"/>
+  <button onclick="addTask()">Add</button>
 
-    <button onclick="addTask()">Add</button>
-    <ul id="taskList">Tasks goes here</ul>
-    
+  <ul id="taskList"></ul>
+
 <script>
-     function addTask(){
-        const taskText= getTaskText();
+  function addTask(){
+    const taskText = getTaskText();
 
-        if (taskText){
-            addTaskItem(taskText);
-        } else{
-            console.log("No task entered");
-        }
-     }
-     function getTaskText(){
-        const input = document.getElementById("taskInput");
-        const value = input.value.trim();
-        console.log("getTaskText() called -> ",value);
-        return value;
+    if (taskText){
+      addTaskItem(taskText);
+    } else {
+      console.log("No task entered");
     }
+  }
 
-    function addTaskItem(taskText){
-        const li = document.createElement("li");
-        li.textContent = taskText;
+  function getTaskText(){
+    const input = document.getElementById("taskInput");
+    const value = input.value.trim();
+    input.value = ""; // clear input after add
+    console.log("getTaskText() called -> ", value);
+    return value;
+  }
 
-        document.getElementById("taskList").appendChild(li);
-        console.log("addTaskItem() called -> ",taskText,Date());
+  function addTaskItem(taskText){
+    const li = document.createElement("li");
 
-             const deleteBtn = createDeleteButton(li);
-        li.appendChild(deleteBtn);
+    // task span (para editable text)
+    const taskSpan = document.createElement("span");
+    taskSpan.textContent = taskText;
+    li.appendChild(taskSpan);
+
+    // delete button
+    const deleteBtn = createDeleteButton(li);
+    li.appendChild(deleteBtn);
+
+    // edit button
+    const editBtn = createEditButton(li, taskSpan);
+    li.appendChild(editBtn);
+
+    document.getElementById("taskList").appendChild(li);
+    console.log("addTaskItem() called -> ", taskText, Date());
+  }
+
+  function createDeleteButton(li){
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.className = "delete-btn";
+    deleteBtn.style.marginLeft = "8px";
+
+    deleteBtn.onclick = () => {
+      li.remove();
+      console.log("Task deleted ->", Date());
+    };
+
+    return deleteBtn;
+  }
+
+  function createEditButton(li, taskSpan){
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.className = "edit-btn";
+    editBtn.style.marginLeft = "8px";
+
+    editBtn.onclick = () => handleEditClick(taskSpan);
+
+    console.log("createEditButton() called ->:", taskSpan.textContent);
+    return editBtn;
+  }
+
+  function handleEditClick(taskSpan){
+    const currentText = taskSpan.textContent.trim();
+    console.log("handleEditClick() -> current:", currentText, Date());
+
+    const newText = prompt("Edit your task", currentText);
+
+    if(newText !== null && newText.trim() !== ""){
+      taskSpan.textContent = newText.trim();
+      console.log("handleEditClick() -> updated to: ", newText.trim(), Date());
+    } else {
+      console.log("handleEditClick -> no changes made");
     }
-
-    function createDeleteButton(li){
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = " X ";
-        deleteBtn.className = "delete-btn";
-        deleteBtn.style.marginLeft = "8px";
-        deleteBtn.onclick = () => handleDeleteClick(li);
-
-        console.log("createDeleteButton() called ->", li.textContent);
-        return deleteBtn;
-    }
-
-    function handleDeleteClick(li){
-        console.log("handleDeleteClick() ->", li.textContent.replace(" X ","").trim(),Date());
-        li.remove();
-    }
-
+  }
 </script>
    
 </body>
