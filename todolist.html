@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To do list</title>
+  <style>
+    .done{
+      text-decoration: line-through;
+      color: rgb(146, 141, 141);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
   <h1>To do list</h1>
@@ -27,7 +35,7 @@
   function getTaskText(){
     const input = document.getElementById("taskInput");
     const value = input.value.trim();
-    input.value = ""; // clear input after add
+    input.value = ""; 
     console.log("getTaskText() called -> ", value);
     return value;
   }
@@ -35,18 +43,22 @@
   function addTaskItem(taskText){
     const li = document.createElement("li");
 
-    // task span (para editable text)
+
     const taskSpan = document.createElement("span");
     taskSpan.textContent = taskText;
     li.appendChild(taskSpan);
 
-    // delete button
+   
     const deleteBtn = createDeleteButton(li);
     li.appendChild(deleteBtn);
 
-    // edit button
+
     const editBtn = createEditButton(li, taskSpan);
     li.appendChild(editBtn);
+
+
+    const doneBtn = createDoneButton(li);
+    li.appendChild(doneBtn);
 
     document.getElementById("taskList").appendChild(li);
     console.log("addTaskItem() called -> ", taskText, Date());
@@ -58,12 +70,13 @@
     deleteBtn.className = "delete-btn";
     deleteBtn.style.marginLeft = "8px";
 
-    deleteBtn.onclick = () => {
-      li.remove();
-      console.log("Task deleted ->", Date());
-    };
-
+    deleteBtn.onclick = () => handleDeleteClick(li);
     return deleteBtn;
+  }
+
+  function handleDeleteClick(li){
+    li.remove();
+    console.log("Task deleted ->", Date());
   }
 
   function createEditButton(li, taskSpan){
@@ -91,7 +104,26 @@
       console.log("handleEditClick -> no changes made");
     }
   }
+
+  function createDoneButton(li){
+    const doneBtn = document.createElement("button");
+    doneBtn.textContent = "Done";
+    doneBtn.style.marginLeft = "8px";
+
+    doneBtn.onclick = () =>{
+      console.log(li);
+      li.classList.add("done");
+
+      const buttons = li.querySelectorAll("button");
+      buttons.forEach(btn => {
+        btn.disabled = true;
+      });
+
+      console.log("Task Completed", li.textContent, Date());
+    }
+    return doneBtn;
+  }
 </script>
-   
+
 </body>
 </html>
