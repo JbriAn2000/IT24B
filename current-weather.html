@@ -9,10 +9,11 @@
 <body>
     <h1>Current Weather</h1>
        <button onclick="getWeather()">Get Current Weather</button>
+        <div id="weatherResult"></div>
     
 </body>
   <script>
-        const apiKey = "";
+        const apiKey = "b2c9a3fa6faf367dca9a2214334169cb";
 
         async function getWeather() {
             console.log("Prompt opened " + Date());
@@ -42,10 +43,9 @@
                     <p>Humidity: ${data.main.humidity}%</p>
                     <p>Wind Speed: ${data.wind.speed} m/s</p>
                 `;
-            } catch (error) {
-                alert("Error: " + error.message);
-                console.error("Fetch error:", error);
-            }
+            }catch(error){
+            console.log("Error "+ error.message);
+        }
         }
     </script>
 </body>
